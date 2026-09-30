@@ -1,7 +1,23 @@
 # OpenRemote Releases
 
-Public distribution repository for OpenRemote Windows release artifacts and update manifests.
+Public distribution repository for OpenRemote Windows releases.
 
-The OpenRemote source repository remains separate. Normal users should download the latest `OpenRemote-Windows-Setup-<version>.zip` from Releases.
+## Install from PowerShell
 
-Every agent release also publishes `openremote-latest.json`, which is consumed by the installed OpenRemote updater.
+```powershell
+irm https://raw.githubusercontent.com/keremerdogdu92/OpenRemote-Releases/main/install.ps1 | iex
+```
+
+The bootstrap resolves the current beta release, verifies the published SHA-256 metadata, installs OpenRemote per-user, and adds the `openremote` command to the user PATH.
+
+After installation:
+
+```powershell
+openremote status
+openremote setup blender
+openremote doctor blender
+```
+
+`openremote setup blender` installs or repairs the optional Blender MCP integration. `openremote doctor blender` checks the local Blender MCP executable and Blender socket connection.
+
+Release artifacts and update manifests remain available under GitHub Releases for the updater and manual diagnostics.
