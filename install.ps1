@@ -27,15 +27,15 @@ Write-Step "Resolving the Komput $Channel release channel..."
 $manifest = Invoke-RestMethod -Uri $manifestUrl
 
 if ([int]$manifest.schemaVersion -ne 1 -or [string]$manifest.product -ne "OpenRemote") {
-    throw "OpenRemote release manifest is invalid."
+    throw "Komput release manifest is invalid."
 }
 if (([string]$manifest.channel).ToLowerInvariant() -ne $Channel) {
-    throw "OpenRemote release channel mismatch."
+    throw "Komput release channel mismatch."
 }
 
 $version = [string]$manifest.version
 if ([string]::IsNullOrWhiteSpace($version)) {
-    throw "OpenRemote release manifest does not contain a version."
+    throw "Komput release manifest does not contain a version."
 }
 
 $releaseBase = "https://github.com/$Repository/releases/download/v$version"
@@ -44,18 +44,18 @@ Write-Step "Resolving Komput $version release metadata..."
 $metadata = Invoke-RestMethod -Uri $metadataUrl
 
 if ([string]$metadata.product -ne "OpenRemote" -or [string]$metadata.version -ne $version) {
-    throw "OpenRemote release metadata does not match the selected version."
+    throw "Komput release metadata does not match the selected version."
 }
 
 $bootstrapArtifact = @($metadata.artifacts | Where-Object { [string]$_.role -eq "bootstrap-archive" } | Select-Object -First 1)
 if (-not $bootstrapArtifact -or $bootstrapArtifact.Count -eq 0) {
-    throw "OpenRemote release metadata does not contain the bootstrap archive."
+    throw "Komput release metadata does not contain the bootstrap archive."
 }
 
 $assetName = [string]$bootstrapArtifact[0].name
 $expectedHash = ([string]$bootstrapArtifact[0].sha256).ToUpperInvariant()
 if ([string]::IsNullOrWhiteSpace($assetName) -or $expectedHash -notmatch "^[A-F0-9]{64}$") {
-    throw "OpenRemote bootstrap metadata is incomplete."
+    throw "Komput bootstrap metadata is incomplete."
 }
 
 $tempRoot = Join-Path ([IO.Path]::GetTempPath()) ("openremote-bootstrap-" + [Guid]::NewGuid().ToString("N"))
@@ -70,7 +70,7 @@ try {
 
     $actualHash = (Get-FileHash -LiteralPath $archivePath -Algorithm SHA256).Hash.ToUpperInvariant()
     if ($actualHash -ne $expectedHash) {
-        throw "OpenRemote bootstrap SHA-256 verification failed."
+        throw "Komput bootstrap SHA-256 verification failed."
     }
 
     Write-Step "Verified release SHA-256."
@@ -78,7 +78,7 @@ try {
 
     $installerPath = Join-Path $extractRoot "Install-OpenRemote.ps1"
     if (-not (Test-Path -LiteralPath $installerPath -PathType Leaf)) {
-        throw "OpenRemote bootstrap archive is missing Install-OpenRemote.ps1."
+        throw "Komput bootstrap archive is missing the compatibility installer payload."
     }
 
     Write-Step "Installing Komput $version on the $Channel channel..."
@@ -91,7 +91,7 @@ try {
     & $installerPath @installArgs
 
     if ($LASTEXITCODE -ne 0) {
-        throw "OpenRemote installer exited with code $LASTEXITCODE."
+        throw "Komput installer exited with code $LASTEXITCODE."
     }
 
     $binDirectory = Join-Path $InstallRoot "bin"
