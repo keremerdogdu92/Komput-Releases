@@ -1,4 +1,4 @@
-# OpenRemote command-first Windows bootstrap.
+# Komput command-first Windows bootstrap.
 # Usage: irm https://raw.githubusercontent.com/keremerdogdu92/Komput-Releases/main/install.ps1 | iex
 
 param(
@@ -12,7 +12,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
 function Write-Step([string]$Message) {
-    Write-Host "[OpenRemote] $Message"
+    Write-Host "[Komput] $Message"
 }
 
 function Get-ManifestUrl {
@@ -23,7 +23,7 @@ function Get-ManifestUrl {
 }
 
 $manifestUrl = Get-ManifestUrl
-Write-Step "Resolving the $Channel release channel..."
+Write-Step "Resolving the Komput $Channel release channel..."
 $manifest = Invoke-RestMethod -Uri $manifestUrl
 
 if ([int]$manifest.schemaVersion -ne 1 -or [string]$manifest.product -ne "OpenRemote") {
@@ -40,7 +40,7 @@ if ([string]::IsNullOrWhiteSpace($version)) {
 
 $releaseBase = "https://github.com/$Repository/releases/download/v$version"
 $metadataUrl = "$releaseBase/openremote-release-metadata.json"
-Write-Step "Resolving OpenRemote $version release metadata..."
+Write-Step "Resolving Komput $version release metadata..."
 $metadata = Invoke-RestMethod -Uri $metadataUrl
 
 if ([string]$metadata.product -ne "OpenRemote" -or [string]$metadata.version -ne $version) {
@@ -65,7 +65,7 @@ New-Item -ItemType Directory -Force -Path $tempRoot, $extractRoot | Out-Null
 
 try {
     $assetUrl = "$releaseBase/$assetName"
-    Write-Step "Downloading OpenRemote $version..."
+    Write-Step "Downloading Komput $version..."
     Invoke-WebRequest -UseBasicParsing -Uri $assetUrl -OutFile $archivePath
 
     $actualHash = (Get-FileHash -LiteralPath $archivePath -Algorithm SHA256).Hash.ToUpperInvariant()
@@ -81,7 +81,7 @@ try {
         throw "OpenRemote bootstrap archive is missing Install-OpenRemote.ps1."
     }
 
-    Write-Step "Installing OpenRemote $version on the $Channel channel..."
+    Write-Step "Installing Komput $version on the $Channel channel..."
     $installArgs = @{
         InstallRoot = $InstallRoot
         Channel = $Channel
