@@ -1,23 +1,34 @@
-# OpenRemote Releases
+# Komput Releases
 
-Public distribution repository for OpenRemote Windows releases.
+Public distribution repository for Komput Windows releases.
 
-## Install from PowerShell
+## Recommended install
+
+If Node.js/npm is available:
 
 ```powershell
-irm https://raw.githubusercontent.com/keremerdogdu92/OpenRemote-Releases/main/install.ps1 | iex
+npx @komput/agent@latest
 ```
 
-The bootstrap resolves the current beta release, verifies the published SHA-256 metadata, installs OpenRemote per-user, and adds the `openremote` command to the user PATH.
+Komput verifies the selected release metadata and bootstrap SHA-256 before installation.
+
+## PowerShell bootstrap
+
+For a bundled-runtime install that does not require system Node.js/npm:
+
+```powershell
+irm https://raw.githubusercontent.com/keremerdogdu92/Komput-Releases/main/install.ps1 | iex
+```
 
 After installation:
 
 ```powershell
-openremote status
-openremote setup blender
-openremote doctor blender
+komput status
+komput connect chatgpt
+komput setup blender
+komput doctor blender
 ```
 
-`openremote setup blender` installs or repairs the optional Blender MCP integration. `openremote doctor blender` checks the local Blender MCP executable and Blender socket connection.
+The legacy `openremote` command and `%LOCALAPPDATA%\OpenRemote` runtime layout remain temporarily available as compatibility internals while existing installations migrate to the Komput product identity.
 
-Release artifacts and update manifests remain available under GitHub Releases for the updater and manual diagnostics.
+Release artifacts and update manifests are published through GitHub Releases. Beta installations follow the mutable `channel-beta` manifest pointer; versioned release artifacts remain immutable.

@@ -1,10 +1,10 @@
 # OpenRemote command-first Windows bootstrap.
-# Usage: irm https://raw.githubusercontent.com/keremerdogdu92/OpenRemote-Releases/main/install.ps1 | iex
+# Usage: irm https://raw.githubusercontent.com/keremerdogdu92/Komput-Releases/main/install.ps1 | iex
 
 param(
     [ValidateSet("stable", "beta")]
     [string]$Channel = "beta",
-    [string]$Repository = "keremerdogdu92/OpenRemote-Releases",
+    [string]$Repository = "keremerdogdu92/Komput-Releases",
     [string]$InstallRoot = (Join-Path $env:LOCALAPPDATA "OpenRemote")
 )
 
@@ -102,9 +102,10 @@ try {
     Write-Host ""
     Write-Step "Installation complete."
     Write-Host "Try:"
-    Write-Host "  openremote status"
-    Write-Host "  openremote setup blender"
-    Write-Host "  openremote doctor blender"
+    Write-Host "  komput status"
+    Write-Host "  komput connect chatgpt"
+    Write-Host "  komput setup blender"
+    Write-Host "  komput doctor blender"
 }
 finally {
     Remove-Item -LiteralPath $tempRoot -Recurse -Force -ErrorAction SilentlyContinue
